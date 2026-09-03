@@ -5,7 +5,7 @@ treatment" (2026), by M. Conte, S. Hiremath, and C. Surulescu.
 
 ## Generalities
 
-## Public gitlab repository
+### Public gitlab repository
 
 GBM_StocastichModel_ConteEtAl_2026: This repository provides Matlab files to simulate the stochastic macroscopic model for for tumor cells and healthy tissue formulate and analyzed in "Randomness-aware multiscale models of glioma invasion and treatment" (2026), by M. Conte, S. Hiremath, and C. Surulescu, available on ArXiv at the link https://arxiv.org/abs/2602.08008
 
