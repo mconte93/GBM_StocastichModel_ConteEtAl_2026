@@ -35,7 +35,7 @@ Qred_FU_max_vec=[];
 Terapies=[15 20 25 30 35 40 45];
 for j=1:size(Terapies,2)
 
-    load (['Evo',num2str(Terapies(j)),'day_Final_Corr.mat'])
+    load (['Evo',num2str(Terapies(j)),'day_Final.mat'])
 
 figure(1)
 subplot(1,2,1)
@@ -145,7 +145,7 @@ hold on
 legend('15 day','20 day','25 day','30 day','35 day','40 day','45 day')
 
 %% TCP/NTP/UTCP and R-score - Test 2
-clear all
+
 Terapies=[15 20 25 30 35 40 45];
 load('Evo15day_Final.mat')
 
@@ -295,8 +295,7 @@ for j = 1:num_protocols
     protocols_tau_matrix(:, j) = timeRec_vec(1:195);
 end
 
-colors = lines(num_protocols); 
-figure('Color', 'white', 'Position', [100, 100, 750, 600]);
+figure;
 hold on;
 
 for p = 1:num_protocols
@@ -316,31 +315,67 @@ for p = 1:num_protocols
         f_rmst = f;
     end
     rmst_values(p) = trapz(x_rmst, f_rmst);
-    stairs(x, f, 'LineStyle', line_styles{p}, 'LineWidth', 1.5,'DisplayName', sprintf('%d day', Terapies(p)));
+    stairs(x, f, 'LineWidth', 1.5,'DisplayName', sprintf('%d day', Terapies(p)));
 end
 
 yline(0.5, 'k:', 'LineWidth', 2.0, 'HandleVisibility', 'off');
-xlabel('Time [d]', 'FontSize', 14, 'Interpreter','Latex');
-ylabel('Relapse-free probability', 'FontSize', 14, 'Interpreter','Latex');
-legend('Location', 'northeast', 'FontSize', 11,'Interpreter','Latex');
+xlabel('Time [d]', Interpreter='latex', FontSize=14);
+ylabel('Relapse-free probability', Interpreter='latex', FontSize=14);
+legend('Location', 'northeast', Interpreter='latex', FontSize=14);
 
-grid on;
-grid off
 xlim([60 T_max]); 
 ylim([0 1]);
-set(gca, 'FontSize', 12, 'LineWidth', 1.2); 
-box on; 
 hold off;
 axis square
 
-figure('Color', 'white', 'Position', [200, 200, 650, 450]);
-bar(Terapies, final_success_rate, 'FaceColor',[.9 .9 .9],'EdgeColor',[0 0 0],'LineWidth',1.5);
-xlabel('$D_T$', 'Interpreter', 'latex', 'FontSize', 14);
-ylabel('Relapse-Free Rate at Day 98 ($\%$)', 'Interpreter', 'latex', 'FontSize', 14);
-ylim([0 100]);
-grid on;
-set(gca, 'FontSize', 12, 'LineWidth', 1.2, 'TickDir', 'out');
-box off;
+%% Kaplar-Meier in SM
+
+subplot_positions = [1, 2, 3, 4, 5, 6, 8]; 
+
+for p = 1:num_protocols
+    tau_rec = protocols_tau_matrix(:, p);
+    
+    durations = tau_rec;
+    is_censored = (tau_rec == 0);
+    durations(is_censored) = T_max; 
+
+    [f, x, flo, fup] = ecdf(durations, 'Censoring', is_censored, 'Function', 'survivor');
+    
+    if x(1) > 0
+        x = [0; x];
+        f = [1; f];
+        flo = [1; flo];
+        fup = [1; fup];
+    end
+
+    subplot(3, 3, subplot_positions(p));
+    hold on;
+   
+    valid_idx = ~isnan(flo) & ~isnan(fup);
+    x_clean = x(valid_idx);
+    f_clean = f(valid_idx);
+    flo_clean = flo(valid_idx);
+    fup_clean = fup(valid_idx);
+    
+   
+    x_patch = [x_clean; flipud(x_clean)];
+    y_patch = [fup_clean; flipud(flo_clean)];
+    fill(x_patch, y_patch, [0.75 0.75 0.75], 'EdgeColor', 'none', 'FaceAlpha', 0.35, 'HandleVisibility', 'off');
+    
+
+    stairs(x_clean, f_clean, 'LineWidth', 1.8, 'Color', [0.1 0.1 0.1],'DisplayName', sprintf('$D_T = %d$ d', Terapies(p)));
+    yline(0.5, 'k:', 'LineWidth', 1.0, 'HandleVisibility', 'off');
+    
+    title(sprintf('$D_T = %d$ days', Terapies(p)), Interpreter='latex', FontSize=20);
+    xlabel('Time [d]', Interpreter='latex', FontSize=18);
+    ylabel('Relapse-free prob.', Interpreter='latex', FontSize=18);
+    
+    xlim([60 T_max]);
+    ylim([0 1.05]);
+    axis square;
+    
+    hold off;
+end
 
 %% TCP/NTCP/UTCP with mean and std - Test 2 SM
 
