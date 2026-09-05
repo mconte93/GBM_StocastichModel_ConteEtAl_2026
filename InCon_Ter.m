@@ -7,7 +7,7 @@
 U_0 = zeros(N, 1);    % Preallocate numerical solution for the tumor equation
 
 % --- Load Baseline Data ---
-% Load final time-step data from the non-therapy simulation
+% Load final time-step data from the non-therapy simulation (from release V1.0)
 load('Evo_noTer_th16_05margin.mat', 'U', 'PTV');
 U_0 = U(:, end);
 PTV_0 = PTV(:, end);
