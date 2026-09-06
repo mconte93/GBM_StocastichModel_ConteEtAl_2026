@@ -219,11 +219,29 @@ hold on
 legend('15 day','20 day','25 day','30 day','35 day','40 day','45 day')
 
 %% Recit criteria - Test 3
+Tred_endT_NS_vec=[];
+Tred_FU_NS_vec=[];
+Tred_endT_NS_T2_vec=[];
+Tred_FU_NS_T2_vec=[];
 
+Terapies=[15 20 25 30 35 40 45];
+for j=1:size(Terapies,2) 
+    load (['Evo',num2str(Terapies(j)),'dayNoStoc_Final.mat'])
+
+    Therapyend=Terapies(j)/5*7+1;
+    Followup=Therapyend+7*4;
+
+    Tred_endT_NS_vec=[Tred_endT_NS_vec Tred_vec(Therapyend)];
+    Tred_endT_NS_T2_vec=[Tred_endT_NS_T2_vec Tred_vec_T2(Therapyend)];
+    Tred_FU_NS_vec=[Tred_FU_NS_vec Tred_vec(Followup)];
+    Tred_FU_NS_T2_vec=[Tred_FU_NS_T2_vec Tred_vec_T2(Followup)];
+end
+ 
 figure(5)
 subplot(2,2,1)
 plot(Terapies,Tred_endT_ave_vec,'k-*',LineWidth=1)
 hold on
+plot(Terapies,Tred_endT_NS_vec,'g:*',LineWidth=2)
 plot(Terapies,Tred_endT_min_vec,'r--*',LineWidth=1)
 plot(Terapies,Tred_endT_max_vec,'r--*',LineWidth=1)
 plot([15 45], [100 100],'--','Color', grayColor,LineWidth=1)
@@ -239,6 +257,7 @@ yticks([-150 -100 -50 0 50 100 150])
 subplot(2,2,2)
 plot(Terapies,Tred_endT_ave_T2_vec,'k-*',LineWidth=1)
 hold on
+plot(Terapies,Tred_endT_NS_T2_vec,'g:*',LineWidth=2)
 plot(Terapies,Tred_endT_min_T2_vec,'r--*',LineWidth=1)
 plot(Terapies,Tred_endT_max_T2_vec,'r--*',LineWidth=1)
 plot([15 45], [100 100],'--','Color', grayColor,LineWidth=1)
@@ -253,6 +272,7 @@ yticks([-150 -100 -50 0 50 100 150])
 subplot(2,2,3)
 plot(Terapies,Tred_FU_ave_vec,'k-*',LineWidth=1)
 hold on
+plot(Terapies,Tred_FU_NS_vec,'g:*',LineWidth=2)
 plot(Terapies,Tred_FU_min_vec,'r--*',LineWidth=1)
 plot(Terapies,Tred_FU_max_vec,'r--*',LineWidth=1)
 plot([15 45], [100 100],'--','Color', grayColor,LineWidth=1)
@@ -268,6 +288,7 @@ yticks([-150 -100 -50 0 50 100 150])
 subplot(2,2,4)
 plot(Terapies,Tred_FU_ave_T2_vec,'k-*',LineWidth=1)
 hold on
+plot(Terapies,Tred_FU_NS_T2_vec,'g:*',LineWidth=2)
 plot(Terapies,Tred_FU_min_T2_vec,'r--*',LineWidth=1)
 plot(Terapies,Tred_FU_max_T2_vec,'r--*',LineWidth=1)
 plot([15 45], [100 100],'--','Color', grayColor,LineWidth=1)
