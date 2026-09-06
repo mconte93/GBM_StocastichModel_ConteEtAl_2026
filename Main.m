@@ -116,7 +116,7 @@ for ns = (SET_of_SIM * NS - NS) + 1 : SET_of_SIM * NS
               SM = exp(-alfaM * dr - betaM * dr^2);
               R_M = 1 - SM;
               SQ = exp(-alfaQ * dr - betaQ * dr^2);
-              R_Q = 1 - SM;
+              R_Q = 1 - SQ;
           else
               CloseZero = 0;
               for k = 1 : step - 1
